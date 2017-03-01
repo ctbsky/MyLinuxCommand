@@ -1,0 +1,33 @@
+#! /bin/bash
+#Program:
+#	Throw away the file to ~/lost+found/
+#	and clear up the ~/lost+found/ on time
+#	example: throw test1.txt test2.txt
+#			 throw -c
+
+# if ~/lost+found doesn't exist, make this directory.
+test ! -d ~/lost+found && mkdir ~/lost+found
+
+if [ $# -ge 1 ]
+then
+	if [ "$1" = "-c" ]; then
+		ls ~/lost+found/* &>> /dev/null && ls ~/lost+found/* && rm -r ~/lost+found/*
+	else
+		# when the number of parameters is not equal zero, move every file to ~/lost+found/
+		while [ "$1" != "" ]; do
+			# if file being moved has exist, modify its name as ${filename}.dup
+			test ! -e $1 && echo "$1 doesn't exist" && exit 0
+			filename=${1##*/}
+
+			# The '$1' will be moved to 'targetfile'
+			targetfile="${HOME}/lost+found/$filename"
+			test -z $filename && targetfile="${targetfile}noname"
+			while [ -e $targetfile ]; do
+				targetfile="${targetfile}.dup"
+			done
+			mv $1 $targetfile
+			shift
+		done
+	fi
+fi
+
