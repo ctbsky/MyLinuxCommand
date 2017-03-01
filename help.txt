@@ -1,0 +1,2 @@
+hello: ELF 64-bit LSB executable, x86-64, print "Hello World".
+throw: like command 'rm', it moves a file or directory to ~/lost+found/.
