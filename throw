@@ -17,14 +17,19 @@ then
 		while [ "$1" != "" ]; do
 			# if file being moved has exist, modify its name as ${filename}.dup
 			test ! -e $1 && echo "$1 doesn't exist" && exit 0
-			filename=${1##*/}
+			# filename=${1##*/}
+			filename=$(basename $1)
 
 			# The '$1' will be moved to 'targetfile'
 			targetfile="${HOME}/lost+found/$filename"
-			test -z $filename && targetfile="${targetfile}noname"
-			while [ -e $targetfile ]; do
-				targetfile="${targetfile}.dup"
+			# test -z $filename && targetfile="${targetfile}noname"
+			num=1
+			temp=$targetfile
+			while [ -e $temp ]; do
+				temp="${targetfile}($num)"
+				num=$(($num+1))
 			done
+			targetfile=$temp
 			mv $1 $targetfile
 			shift
 		done
